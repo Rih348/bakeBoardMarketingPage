@@ -192,7 +192,7 @@
 const CONFIG = {
   // Paste the Production URL of the n8n node "استقبال التسجيل", e.g.
   // "https://n8n.yourdomain.com/webhook/cloudbakeboard-signup"
-  SUBMIT_URL: ""
+  SUBMIT_URL: "https://ririsharp.app.n8n.cloud/webhook/cloudbakeboard-signup"
 };
 
 const T = {
@@ -295,7 +295,8 @@ f.addEventListener("submit", async e => {
   go.disabled = true; go.textContent = T[lang].sending; fail.hidden = true;
   try {
     if (CONFIG.SUBMIT_URL) {
-      const r = await fetch(CONFIG.SUBMIT_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      // Sent as a simple form post (no CORS preflight); n8n reads it into body.
+      const r = await fetch(CONFIG.SUBMIT_URL, { method: "POST", body: new URLSearchParams(data) });
       if (!r.ok) throw new Error("HTTP " + r.status);
     } else {
       console.log("[CloudBakeboard] sign-up (not connected yet):", data);
