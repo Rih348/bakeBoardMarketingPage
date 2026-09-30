@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22%23378152%22/%3E%3Cg%20fill%3D%22%23fff%22%3E%3Ccircle%20cx%3D%2225%22%20cy%3D%2229%22%20r%3D%2210%22/%3E%3Ccircle%20cx%3D%2238%22%20cy%3D%2225%22%20r%3D%2212%22/%3E%3Crect%20x%3D%2212%22%20y%3D%2228%22%20width%3D%2240%22%20height%3D%2220%22%20rx%3D%2210%22/%3E%3C/g%3E%3Cg%20fill%3D%22%23378152%22%3E%3Crect%20x%3D%2220%22%20y%3D%2231%22%20width%3D%2220%22%20height%3D%224%22%20rx%3D%222%22/%3E%3Crect%20x%3D%2220%22%20y%3D%2239%22%20width%3D%2214%22%20height%3D%224%22%20rx%3D%222%22/%3E%3C/g%3E%3Ccircle%20cx%3D%2244%22%20cy%3D%2241%22%20r%3D%223.5%22%20fill%3D%22%23F28C38%22/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22%23378152%22/%3E%3Cpath%20d%3D%22M12%2026%20L50%2016%20L50%2048%20L12%2048%20Z%22%20fill%3D%22%23fff%22%20stroke%3D%22%23fff%22%20stroke-width%3D%224%22%20stroke-linejoin%3D%22round%22/%3E%3Crect%20x%3D%2212%22%20y%3D%2230%22%20width%3D%2238%22%20height%3D%224%22%20fill%3D%22%23378152%22/%3E%3Crect%20x%3D%2212%22%20y%3D%2239%22%20width%3D%2238%22%20height%3D%224%22%20fill%3D%22%23378152%22/%3E%3Ccircle%20cx%3D%2244%22%20cy%3D%2213%22%20r%3D%225%22%20fill%3D%22%23F28C38%22/%3E%3C/svg%3E">
 <title>Bakeboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,7 +30,6 @@
   .top { display: flex; align-items: center; justify-content: space-between; padding-block: 18px; }
   .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
   .logo .mark { flex: none; }
-  .m-bg { fill: #378152; } .m-cloud { fill: #FFFFFF; } .m-dot { fill: #F28C38; }  
   .logo-text { display: grid; line-height: 1.15; }
   .logo-text small { font-weight: 400; font-size: 12px; color: var(--muted); }
   .lang { background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 5px 14px; font: inherit; font-size: 13px; cursor: pointer; }
@@ -96,7 +95,7 @@
 <div class="wrap">
   <header class="top">
     <div class="logo">
-      <svg class="mark" viewBox="0 0 64 64" width="36" height="36" aria-hidden="true"><rect width="64" height="64" rx="16" class="m-bg"/><g class="m-cloud"><circle cx="25" cy="29" r="10"/><circle cx="38" cy="25" r="12"/><rect x="12" y="28" width="40" height="20" rx="10"/></g><g class="m-bg"><rect x="20" y="31" width="20" height="4" rx="2"/><rect x="20" y="39" width="14" height="4" rx="2"/></g><circle cx="44" cy="41" r="3.5" class="m-dot"/></svg>
+      <svg class="mark" viewBox="0 0 64 64" width="36" height="36" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#378152"/><path d="M12 26 L50 16 L50 48 L12 48 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"/><rect x="12" y="30" width="38" height="4" fill="#378152"/><rect x="12" y="39" width="38" height="4" fill="#378152"/><circle cx="44" cy="13" r="5" fill="#F28C38"/></svg>
       <span class="logo-text">Bakeboard<small data-t="tagline"></small></span>
     </div>
     <button class="lang" id="langBtn" type="button">English</button>
