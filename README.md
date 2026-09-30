@@ -1,4 +1,4 @@
-# CloudBakeboard
+# Bakeboard
 
 Landing page and demo sign-up for cloudbakeboard.com, served by GitHub Pages.
 

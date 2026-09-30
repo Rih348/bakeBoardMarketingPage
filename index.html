@@ -299,7 +299,7 @@ f.addEventListener("submit", async e => {
       const r = await fetch(CONFIG.SUBMIT_URL, { method: "POST", body: new URLSearchParams(data) });
       if (!r.ok) throw new Error("HTTP " + r.status);
     } else {
-      console.log("[CloudBakeboard] sign-up (not connected yet):", data);
+      console.log("[Bakeboard] sign-up (not connected yet):", data);
     }
     document.getElementById("formView").hidden = true;
     document.getElementById("doneView").hidden = false;
