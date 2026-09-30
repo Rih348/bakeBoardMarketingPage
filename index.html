@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22%23378152%22/%3E%3Cg%20fill%3D%22%23fff%22%3E%3Ccircle%20cx%3D%2225%22%20cy%3D%2229%22%20r%3D%2210%22/%3E%3Ccircle%20cx%3D%2238%22%20cy%3D%2225%22%20r%3D%2212%22/%3E%3Crect%20x%3D%2212%22%20y%3D%2228%22%20width%3D%2240%22%20height%3D%2220%22%20rx%3D%2210%22/%3E%3C/g%3E%3Cg%20fill%3D%22%23378152%22%3E%3Crect%20x%3D%2220%22%20y%3D%2231%22%20width%3D%2220%22%20height%3D%224%22%20rx%3D%222%22/%3E%3Crect%20x%3D%2220%22%20y%3D%2239%22%20width%3D%2214%22%20height%3D%224%22%20rx%3D%222%22/%3E%3C/g%3E%3Ccircle%20cx%3D%2244%22%20cy%3D%2241%22%20r%3D%223.5%22%20fill%3D%22%23F28C38%22/%3E%3C/svg%3E">
+<title>CloudBakeboard Demo Sign-up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* Layout: one mint hero panel: promise on one side, sign-up card on the other; stacked on phones. */
+  /* Light, fresh look by choice: one bright theme in every viewer setting. */
+  :root {
+    --bg: #FFFBF7; --surface: #FFFFFF; --ink: #2A3A2C; --muted: #66705F;
+    --line: #EFE5DC; --brand: #378152; --brand-ink: #FFFFFF; --brand-soft: #EEF7EF;
+    --accent: #F28C38; --accent-ink: #A8520F; --blush: #FFEBDD;
+    --error: #B3261E; --ok: #2E7D4F;
+    --font: "IBM Plex Sans Arabic", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.55; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding-inline: 16px; }
+  section { padding-block: 40px; }
+  h1, h2 { text-wrap: balance; margin: 0; }
+  h2 { font-size: 24px; margin-bottom: 20px; }
+
+  /* header */
+  .top { display: flex; align-items: center; justify-content: space-between; padding-block: 18px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
+  .logo .mark { flex: none; }
+  .m-bg { fill: #378152; } .m-cloud { fill: #FFFFFF; } .m-dot { fill: #F28C38; }  
+  .logo-text { display: grid; line-height: 1.15; }
+  .logo-text small { font-weight: 400; font-size: 12px; color: var(--muted); }
+  .lang { background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 5px 14px; font: inherit; font-size: 13px; cursor: pointer; }
+  .lang:hover, .lang:focus-visible { color: var(--ink); border-color: var(--brand); outline: none; }
+
+  /* hero */
+  .hero { position: relative; padding-block: 48px; padding-inline: 48px; margin-top: 8px;
+    background: var(--brand-soft); border-radius: 32px; overflow: hidden; isolation: isolate; }
+  .hero::before, .hero::after { content: ""; position: absolute; border-radius: 50%; z-index: -1; }
+  .hero::before { width: 220px; height: 220px; background: var(--blush); top: -80px; inset-inline-start: -60px; }
+  .hero::after { width: 140px; height: 140px; background: #FFF4C9; bottom: -50px; inset-inline-end: 8%; }
+  .hero-grid { display: grid; grid-template-columns: 1fr minmax(0, 420px); gap: 48px; align-items: center; }
+  .hero-text { min-width: 0; }
+  .hero h1 { font-size: clamp(30px, 4.4vw, 48px); line-height: 1.2; max-width: 14ch; }
+  .hero-text p { color: var(--muted); font-size: 18px; margin: 14px 0 0; max-width: 38ch; }
+  .points { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 12px; }
+  .points li { display: flex; align-items: center; gap: 10px; font-weight: 500; }
+  .points i { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--surface); color: var(--brand); display: grid; place-items: center; box-shadow: 0 2px 8px rgba(55,129,82,.12); }
+  .points li.more { color: var(--brand); font-weight: 700; padding-inline-start: 36px; }
+  @media (max-width: 860px) {
+    .points { justify-content: center; }
+    .hero { padding-block: 32px 20px; padding-inline: 16px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 28px; }
+    .hero-text { text-align: center; }
+    .hero h1, .hero-text p { margin-inline: auto; }
+  }
+
+  /* sign-up */
+  .card { width: 100%; max-width: 440px; margin-inline: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 30px 26px; box-shadow: 0 12px 36px rgba(242,140,56,.12); }
+  @media (max-width: 420px) { .card { padding: 24px 18px; } }
+  .card h2 { margin-bottom: 4px; }
+  .card .sub { color: var(--muted); margin: 0 0 20px; font-size: 15px; }
+  form { display: grid; gap: 12px; }
+  .field input, .field select { width: 100%; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid transparent; border-radius: 12px; padding: 13px 14px; outline: none; transition: border-color .15s, box-shadow .15s; }
+  .field select { appearance: none; cursor: pointer; }
+  .field select:invalid { color: var(--muted); }
+  .field input::placeholder { color: var(--muted); }
+  .field input:focus, .field select:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+  .field.bad input, .field.bad select { border-color: var(--error); }
+  .field .err { display: none; color: var(--error); font-size: 13px; margin-top: 4px; }
+  .field.bad .err { display: block; }
+  input[type=tel] { direction: ltr; }
+  [dir=rtl] input[type=tel] { text-align: right; }
+  .opt { color: var(--muted); font-size: 12px; }
+  button.go { margin-top: 4px; background: var(--brand); color: var(--brand-ink); border: 0; border-radius: 12px; padding: 14px; font: inherit; font-weight: 700; cursor: pointer; }
+  button.go:hover { filter: brightness(1.06); }
+  button.go:focus-visible { outline: 3px solid var(--brand-soft); outline-offset: 2px; }
+  button.go:disabled { opacity: .6; cursor: default; }
+  .fine { color: var(--muted); font-size: 12px; text-align: center; margin: 0; }
+  .fail { color: var(--error); font-size: 13px; text-align: center; margin: 0; }
+  .hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; opacity: 0; pointer-events: none; }
+  .done { text-align: center; padding: 10px 0; }
+  .done .tick { width: 56px; height: 56px; border-radius: 50%; background: var(--brand-soft); color: var(--ok); display: grid; place-items: center; margin: 0 auto 14px; }
+  .done p { color: var(--muted); margin: 6px 0 0; }
+
+  footer { margin-top: 40px; border-top: 1px solid var(--line); padding-block: 20px 28px; color: var(--muted); font-size: 13px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body style="margin:0">
+
+<div class="wrap">
+  <header class="top">
+    <div class="logo">
+      <svg class="mark" viewBox="0 0 64 64" width="36" height="36" aria-hidden="true"><rect width="64" height="64" rx="16" class="m-bg"/><g class="m-cloud"><circle cx="25" cy="29" r="10"/><circle cx="38" cy="25" r="12"/><rect x="12" y="28" width="40" height="20" rx="10"/></g><g class="m-bg"><rect x="20" y="31" width="20" height="4" rx="2"/><rect x="20" y="39" width="14" height="4" rx="2"/></g><circle cx="44" cy="41" r="3.5" class="m-dot"/></svg>
+      <span class="logo-text">CloudBakeboard<small data-t="tagline"></small></span>
+    </div>
+    <button class="lang" id="langBtn" type="button">English</button>
+  </header>
+
+  <section class="hero" id="signup">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <h1 data-t="title"></h1>
+        <p data-t="lead"></p>
+        <ul class="points">
+          <li><i><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></i><span data-t="p1"></span></li>
+          <li><i><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></i><span data-t="p2"></span></li>
+          <li><i><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></i><span data-t="p3"></span></li>
+          <li class="more"><span data-t="p4"></span></li>
+        </ul>
+      </div>
+        <div class="card">
+          <div id="formView">
+            <h2 data-t="formTitle"></h2>
+            <p class="sub" data-t="formSub"></p>
+            <form id="f" novalidate>
+              <div class="field"><input id="name" name="name" type="text" maxlength="80" autocomplete="name" data-ph="name"><div class="err" data-t="req"></div></div>
+              <div class="field"><input id="phone" name="phone" type="tel" inputmode="tel" maxlength="16" autocomplete="tel" data-ph="phone"><div class="err" data-t="badPhone"></div></div>
+              <div class="field">
+                <select id="city" name="city" required>
+                  <option value="" data-t="city"></option>
+                  <option value="riyadh" data-t="riyadh"></option>
+                  <option value="jeddah" data-t="jeddah"></option>
+                  <option value="makkah" data-t="makkah"></option>
+                  <option value="madinah" data-t="madinah"></option>
+                  <option value="eastern" data-t="eastern"></option>
+                  <option value="other" data-t="other"></option>
+                </select>
+                <div class="err" data-t="req"></div>
+              </div>
+              <div class="field"><input id="bakery" name="bakery" type="text" maxlength="100" autocomplete="organization" data-ph="bakery"><div class="err" data-t="req"></div></div>
+              <div class="field">
+                <select id="type" name="type" required>
+                  <option value="" data-t="type"></option>
+                  <option value="home" data-t="t_home"></option>
+                  <option value="shop" data-t="t_shop"></option>
+                  <option value="branches" data-t="t_branches"></option>
+                  <option value="cafe" data-t="t_cafe"></option>
+                </select>
+                <div class="err" data-t="req"></div>
+              </div>
+              <div class="field">
+                <select id="volume" name="volume" required>
+                  <option value="" data-t="volume"></option>
+                  <option value="lt20" data-t="v1"></option>
+                  <option value="20-50" data-t="v2"></option>
+                  <option value="50-150" data-t="v3"></option>
+                  <option value="gt150" data-t="v4"></option>
+                </select>
+                <div class="err" data-t="req"></div>
+              </div>
+              <div class="field">
+                <select id="help" name="help" required>
+                  <option value="" data-t="help"></option>
+                  <option value="organise" data-t="h_1"></option>
+                  <option value="ordering-page" data-t="h_2"></option>
+                  <option value="payments" data-t="h_3"></option>
+                  <option value="baking-plan" data-t="h_4"></option>
+                  <option value="customer-updates" data-t="h_5"></option>
+                  <option value="other" data-t="h_6"></option>
+                </select>
+                <div class="err" data-t="req"></div>
+              </div>
+              <div class="hp" aria-hidden="true"><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+              <button class="go" id="go" type="submit" data-t="send"></button>
+              <p class="fail" id="fail" hidden></p>
+              <p class="fine" data-t="fine"></p>
+            </form>
+          </div>
+          <div class="done" id="doneView" hidden>
+            <div class="tick" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+            <h2 data-t="okTitle"></h2>
+            <p data-t="okText"></p>
+          </div>
+        </div>
+    </div>
+  </section>
+
+
+
+
+  <footer><span>© <span id="yr"></span> CloudBakeboard</span><span>cloudbakeboard.com</span></footer>
+</div>
+
+<script>
+/* Fill in when connecting the form */
+const CONFIG = {
+  // Paste the Production URL of the n8n node "استقبال التسجيل", e.g.
+  // "https://n8n.yourdomain.com/webhook/cloudbakeboard-signup"
+  SUBMIT_URL: ""
+};
+
+const T = {
+  ar: {
+    lang: "English",
+    tagline: "لوحة طلبات مخبزك",
+    title: "خلّ طلبات مخبزك تترتب لحالها",
+    lead: "نشيل عنك الشغل المتكرر في الطلبات، من أول ما يوصلك الطلب لين تسلّمه.",
+    p1: "صفحة طلبات أونلاين باسم مخبزك", p2: "لوحة تشوف فيها كل طلب ووين وصل", p3: "قائمة يومية تقولك وش تجهّز ومتى", p4: "وغيرها كثير، تشوفه بنفسك في العرض",
+    formTitle: "احجز عرض تجريبي", formSub: "سجّل بياناتك وبنتواصل معك في أقرب وقت.",
+    type: "وش نوع مشروعك؟", t_home: "مخبز منزلي", t_shop: "مخبز أو محل حلويات", t_branches: "عندي أكثر من فرع", t_cafe: "كوفي يبيع حلوياته",
+    volume: "كم طلب يجيك تقريبًا بالأسبوع؟", v1: "أقل من 20", v2: "من 20 لين 50", v3: "من 50 لين 150", v4: "أكثر من 150",
+    help: "وش أكثر شي تبينا نساعدك فيه؟", h_1: "ترتيب الطلبات وما يضيع ولا طلب", h_2: "صفحة يطلب منها عملائي أونلاين",
+    h_3: "متابعة الدفع والتحويلات", h_4: "ترتيب التجهيز اليومي", h_5: "أبلّغ العميل وين وصل طلبه", h_6: "شي ثاني",
+    bakery: "اسم المخبز", name: "اسمك", phone: "رقم جوالك",
+    city: "وش مدينتك؟", riyadh: "الرياض", jeddah: "جدة", makkah: "مكة", madinah: "المدينة",
+    eastern: "الشرقية", other: "مدينة ثانية",
+    send: "احجز العرض", fine: "لما تسجّل، توافق إننا نتواصل معك.",
+    req: "لازم تعبّيه", badPhone: "تأكد من رقم الجوال، مثل 05XXXXXXXX",
+    sending: "لحظة…", sendFail: "ما وصلنا طلبك، جرّب مرة ثانية.",
+    okTitle: "وصلنا طلبك", okText: "بنكلمك قريب على الواتساب."
+  },
+  en: {
+    lang: "العربية",
+    tagline: "Your bakery's order board",
+    title: "Your bakery orders, organised automatically",
+    lead: "We automate the repetitive steps in your bakery's orders, from the first request to delivery.",
+    p1: "An online ordering page in your bakery's name", p2: "A board to track every order and its status", p3: "A daily list of what to prepare, and when", p4: "And more, which we'll show you in the demo",
+    screensTitle: "",
+    tag1: "For customers", tag2: "For your team",
+    s1t: "Ordering page", s1d: "A link in your bakery's name. Customers choose and order, no DMs.",
+    s2t: "Order board", s2d: "Every order by status: new, awaiting payment, confirmed.",
+    s3t: "Today's orders", s3d: "What to prepare today and tomorrow, sorted by time.",
+    alt1: "Customer ordering page", alt2: "Team order board", alt3: "Today's orders list",
+    howTitle: "How it works",
+    h1t: "Customer orders", h1d: "From your bakery's link, not DMs",
+    h2t: "You send the price", h2d: "They transfer and the order is confirmed",
+    h3t: "Bake and deliver", h3d: "From today's list, nothing gets lost",
+    incTitle: "Included",
+    i1: "Menu and photo setup", i2: "Your logo and colours", i3: "Your own link or domain",
+    i4: "Team training", i5: "WhatsApp support", i6: "Ongoing updates",
+    soonTitle: "More automation on the way", soonTag: "Soon",
+    f1: "Online payment with mada and Apple Pay", f2: "Automatic WhatsApp updates to customers", f3: "Sales reports", f4: "Opening hours and daily order limits",
+    formTitle: "Book a demo", formSub: "Leave your details and we'll get back to you soon.",
+    type: "Business type", t_home: "Home bakery", t_shop: "Bakery or dessert shop", t_branches: "Brand with several branches", t_cafe: "Café selling its own desserts",
+    volume: "Roughly how many orders a week?", v1: "Under 20", v2: "20 to 50", v3: "50 to 150", v4: "Over 150",
+    help: "What do you need help with most?", h_1: "Organising orders so none get lost", h_2: "An online ordering page for my customers",
+    h_3: "Tracking payments and transfers", h_4: "Planning daily baking", h_5: "Keeping customers updated on their order", h_6: "Something else",
+    bakery: "Bakery name", name: "Your name", phone: "Mobile number",
+    city: "City", riyadh: "Riyadh", jeddah: "Jeddah", makkah: "Makkah", madinah: "Madinah",
+    eastern: "Eastern Province", other: "Other",
+    send: "Book a demo", fine: "By signing up you agree to be contacted.",
+    req: "Required", badPhone: "Not a valid Saudi mobile",
+    sending: "Sending…", sendFail: "Couldn't send. Please try again.",
+    okTitle: "Got it", okText: "We'll contact you on WhatsApp soon."
+  }
+};
+
+let lang = "ar";
+try { const s = localStorage.getItem("cbb_lang"); if (s === "ar" || s === "en") lang = s; } catch (e) {}
+
+function applyLang() {
+  const d = T[lang], root = document.documentElement;
+  root.lang = lang;
+  root.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
+  document.querySelectorAll("[data-t]").forEach(el => el.textContent = d[el.dataset.t] ?? "");
+  document.querySelectorAll("[data-ph]").forEach(el => el.placeholder = d[el.dataset.ph]);
+  document.querySelectorAll("[data-alt]").forEach(el => el.alt = d[el.dataset.alt]);
+  document.getElementById("langBtn").textContent = d.lang;
+}
+document.getElementById("langBtn").onclick = () => {
+  lang = lang === "ar" ? "en" : "ar";
+  try { localStorage.setItem("cbb_lang", lang); } catch (e) {}
+  applyLang();
+};
+
+/* Saudi mobile -> +9665XXXXXXXX (accepts 05…, 5…, 966…, +966…, 00966…, Arabic digits) */
+function phoneOk(raw) {
+  let s = String(raw).replace(/[٠-٩]/g, c => "٠١٢٣٤٥٦٧٨٩".indexOf(c)).replace(/[\s\-()]/g, "")
+    .replace(/^\+/, "").replace(/^00/, "");
+  if (s.startsWith("966")) s = s.slice(3);
+  if (s.startsWith("0")) s = s.slice(1);
+  return /^5\d{8}$/.test(s) ? "+966" + s : null;
+}
+
+const f = document.getElementById("f");
+f.addEventListener("input", e => e.target.closest(".field")?.classList.remove("bad"));
+f.addEventListener("change", e => e.target.closest(".field")?.classList.remove("bad"));
+f.addEventListener("submit", async e => {
+  e.preventDefault();
+  if (f.website.value) return;
+  const checks = [[f.bakery, f.bakery.value.trim()], [f.name, f.name.value.trim()], [f.phone, phoneOk(f.phone.value)], [f.city, f.city.value], [f.type, f.type.value], [f.volume, f.volume.value], [f.help, f.help.value]];
+  let first = null;
+  checks.forEach(([el, ok]) => { el.closest(".field").classList.toggle("bad", !ok); if (!ok && !first) first = el; });
+  if (first) { first.focus(); return; }
+  const data = { bakeryName: f.bakery.value.trim(), ownerName: f.name.value.trim(), phone: phoneOk(f.phone.value),
+    city: f.city.value, businessType: f.type.value, ordersPerWeek: f.volume.value,
+    needHelpWith: f.help.value, language: lang, submittedAt: new Date().toISOString() };
+  const go = document.getElementById("go"), fail = document.getElementById("fail");
+  go.disabled = true; go.textContent = T[lang].sending; fail.hidden = true;
+  try {
+    if (CONFIG.SUBMIT_URL) {
+      const r = await fetch(CONFIG.SUBMIT_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+    } else {
+      console.log("[CloudBakeboard] sign-up (not connected yet):", data);
+    }
+    document.getElementById("formView").hidden = true;
+    document.getElementById("doneView").hidden = false;
+  } catch (err) {
+    fail.textContent = T[lang].sendFail; fail.hidden = false;
+    go.disabled = false; go.textContent = T[lang].send;
+  }
+});
+
+document.getElementById("yr").textContent = new Date().getFullYear();
+applyLang();
+</script>
+
+</body>
+</html>
