@@ -87,6 +87,17 @@
   .done p { color: var(--muted); margin: 6px 0 0; }
 
   footer { margin-top: 40px; border-top: 1px solid var(--line); padding-block: 20px 28px; color: var(--muted); font-size: 13px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+
+  /* WhatsApp contact: floating pill, bottom corner on the reading-end side */
+  .wa { position: fixed; bottom: 20px; inset-inline-end: 20px; z-index: 50; width: 58px; height: 58px; border-radius: 50%;
+    display: grid; place-items: center; background: #1FA855; color: #fff;
+    box-shadow: 0 8px 24px rgba(31,168,85,.35); transition: transform .15s, filter .15s; }
+  .wa:hover { filter: brightness(1.06); transform: translateY(-2px); }
+  .wa:focus-visible { outline: 3px solid #fff; box-shadow: 0 0 0 6px #1FA855; }
+  @media (max-width: 420px) { .wa { bottom: 14px; inset-inline-end: 14px; width: 54px; height: 54px; } }
+  .wa-alt { display: block; text-align: center; margin-top: 2px; font-size: 13px; color: var(--brand); font-weight: 500; text-decoration: none; }
+  .wa-alt:hover { text-decoration: underline; }
+  footer { padding-bottom: 84px; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
   html { scroll-behavior: smooth; }
 </style>
@@ -171,6 +182,7 @@
               <button class="go" id="go" type="submit" data-t="send"></button>
               <p class="fail" id="fail" hidden></p>
               <p class="fine" data-t="fine"></p>
+              <a class="wa-alt" id="waAlt" href="#" target="_blank" rel="noopener" data-t="waAlt"></a>
             </form>
           </div>
           <div class="done" id="doneView" hidden>
@@ -185,6 +197,8 @@
 
 
 
+  <a class="wa" id="waBtn" href="#" target="_blank" rel="noopener"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 20.5l1.3-4.2A8.5 8.5 0 1 1 8 19.4z"/><path d="M9 8.6c.2-.5.5-.6.8-.6h.5l.9 2-.6.8c.4.9 1.2 1.7 2.1 2.1l.8-.6 2 .9v.5c0 .3-.1.6-.6.8-.9.4-2.5.1-4-1.4S8.6 9.5 9 8.6z" fill="currentColor" stroke-width="1"/></svg></a>
+
   <footer><span>© <span id="yr"></span> Bakeboard</span><span>cloudbakeboard.com</span></footer>
 </div>
 
@@ -193,7 +207,9 @@
 const CONFIG = {
   // Paste the Production URL of the n8n node "استقبال التسجيل", e.g.
   // "https://n8n.yourdomain.com/webhook/cloudbakeboard-signup"
-  SUBMIT_URL: "https://ririsharp.app.n8n.cloud/webhook/cloudbakeboard-signup"
+  SUBMIT_URL: "https://ririsharp.app.n8n.cloud/webhook/cloudbakeboard-signup",
+  // Bakeboard WhatsApp number, international format, digits only (e.g. "9665XXXXXXXX")
+  WHATSAPP: "966564978418"
 };
 
 const T = {
@@ -214,7 +230,12 @@ const T = {
     send: "احجز العرض", fine: "لما تسجّل، توافق إننا نتواصل معك.",
     req: "لازم تعبّيه", badPhone: "تأكد من رقم الجوال، مثل 05XXXXXXXX",
     sending: "لحظة…", sendFail: "ما وصلنا طلبك، جرّب مرة ثانية.",
+<<<<<<< Updated upstream
     okTitle: "وصلنا طلبك", okText: "فريقنا حيتواصل معاك قريب عبر الواتساب"
+=======
+    okTitle: "وصلنا طلبك", okText: "بنكلمك قريب على الواتساب.",
+    waBtn: "تواصل معنا واتساب", waAlt: "تبي تسأل قبل؟ كلمنا على الواتساب", waMsg: "السلام عليكم، حاب أعرف أكثر عن Bakeboard"
+>>>>>>> Stashed changes
   },
   en: {
     lang: "العربية",
@@ -248,7 +269,8 @@ const T = {
     send: "Book a demo", fine: "By signing up you agree to be contacted.",
     req: "Required", badPhone: "Not a valid Saudi mobile",
     sending: "Sending…", sendFail: "Couldn't send. Please try again.",
-    okTitle: "Got it", okText: "We'll contact you on WhatsApp soon."
+    okTitle: "Got it", okText: "We'll contact you on WhatsApp soon.",
+    waBtn: "Chat on WhatsApp", waAlt: "Questions first? Message us on WhatsApp", waMsg: "Hi, I'd like to know more about Bakeboard"
   }
 };
 
@@ -263,6 +285,11 @@ function applyLang() {
   document.querySelectorAll("[data-ph]").forEach(el => el.placeholder = d[el.dataset.ph]);
   document.querySelectorAll("[data-alt]").forEach(el => el.alt = d[el.dataset.alt]);
   document.getElementById("langBtn").textContent = d.lang;
+  const wa = "https://wa.me/" + CONFIG.WHATSAPP + "?text=" + encodeURIComponent(d.waMsg);
+  document.getElementById("waBtn").href = wa;
+  document.getElementById("waBtn").setAttribute("aria-label", d.waBtn);
+  document.getElementById("waBtn").title = d.waBtn;
+  document.getElementById("waAlt").href = wa;
 }
 document.getElementById("langBtn").onclick = () => {
   lang = lang === "ar" ? "en" : "ar";
