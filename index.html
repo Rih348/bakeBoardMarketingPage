@@ -205,9 +205,8 @@
 <script>
 /* Fill in when connecting the form */
 const CONFIG = {
-  // Paste the Production URL of the n8n node "استقبال التسجيل", e.g.
-  // "https://n8n.yourdomain.com/webhook/cloudbakeboard-signup"
-  SUBMIT_URL: "https://ririsharp.app.n8n.cloud/webhook/cloudbakeboard-signup",
+  // Formspree form endpoint (sign-ups arrive by email + in the Formspree dashboard)
+  SUBMIT_URL: "https://formspree.io/f/moeezogr",
   // Bakeboard WhatsApp number, international format, digits only (e.g. "9665XXXXXXXX")
   WHATSAPP: "966564978418"
 };
@@ -312,15 +311,28 @@ f.addEventListener("submit", async e => {
   let first = null;
   checks.forEach(([el, ok]) => { el.closest(".field").classList.toggle("bad", !ok); if (!ok && !first) first = el; });
   if (first) { first.focus(); return; }
-  const data = { bakeryName: f.bakery.value.trim(), ownerName: f.name.value.trim(), phone: phoneOk(f.phone.value),
-    city: f.city.value, businessType: f.type.value, ordersPerWeek: f.volume.value,
-    needHelpWith: f.help.value, language: lang, submittedAt: new Date().toISOString() };
+  // Readable Arabic labels (same in both languages) so the email/dashboard is easy to scan
+  const label = sel => T.ar[sel.selectedOptions[0].dataset.t] || sel.value;
+  const bakery = f.bakery.value.trim();
+  const data = {
+    "المخبز": bakery,
+    "الاسم": f.name.value.trim(),
+    "الجوال": phoneOk(f.phone.value),
+    "المدينة": label(f.city),
+    "نوع المشروع": label(f.type),
+    "طلبات بالأسبوع": label(f.volume),
+    "يحتاج مساعدة في": label(f.help),
+    "اللغة": lang === "en" ? "English" : "عربي",
+    _subject: "تسجيل جديد في Bakeboard: " + bakery,
+    _gotcha: f.website.value   // Formspree's bot trap: filled = dropped as spam
+  };
   const go = document.getElementById("go"), fail = document.getElementById("fail");
   go.disabled = true; go.textContent = T[lang].sending; fail.hidden = true;
   try {
     if (CONFIG.SUBMIT_URL) {
-      // Sent as a simple form post (no CORS preflight); n8n reads it into body.
-      const r = await fetch(CONFIG.SUBMIT_URL, { method: "POST", body: new URLSearchParams(data) });
+      // Accept: application/json makes Formspree reply with JSON instead of redirecting to its thank-you page
+      const r = await fetch(CONFIG.SUBMIT_URL, { method: "POST", body: new URLSearchParams(data),
+        headers: { Accept: "application/json" } });
       if (!r.ok) throw new Error("HTTP " + r.status);
     } else {
       console.log("[Bakeboard] sign-up (not connected yet):", data);
