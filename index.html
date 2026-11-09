@@ -131,7 +131,7 @@
             <p class="sub" data-t="formSub"></p>
             <form id="f" novalidate>
               <div class="field"><input id="name" name="name" type="text" maxlength="80" autocomplete="name" data-ph="name"><div class="err" data-t="req"></div></div>
-              <div class="field"><input id="phone" name="phone" type="tel" inputmode="tel" maxlength="16" autocomplete="tel" data-ph="phone"><div class="err" data-t="badPhone"></div></div>
+              <div class="field"><input id="phone" name="phone" type="tel" inputmode="tel" maxlength="24" autocomplete="tel" data-ph="phone"><div class="err" data-t="badPhone"></div></div>
               <div class="field">
                 <select id="city" name="city" required>
                   <option value="" data-t="city"></option>
@@ -141,9 +141,11 @@
                   <option value="madinah" data-t="madinah"></option>
                   <option value="eastern" data-t="eastern"></option>
                   <option value="other" data-t="other"></option>
+                  <option value="abroad" data-t="abroad"></option>
                 </select>
                 <div class="err" data-t="req"></div>
               </div>
+              <div class="field" id="placeField" hidden><input id="place" name="place" type="text" maxlength="80" autocomplete="address-level2"><div class="err" data-t="req"></div></div>
               <div class="field"><input id="bakery" name="bakery" type="text" maxlength="100" autocomplete="organization" data-ph="bakery"><div class="err" data-t="req"></div></div>
               <div class="field">
                 <select id="type" name="type" required>
@@ -225,9 +227,10 @@ const T = {
     h_3: "متابعة الدفع والتحويلات", h_4: "ترتيب التجهيز اليومي", h_5: "أبلّغ العميل وين وصل طلبه", h_6: "شي ثاني",
     bakery: "اسم المخبز", name: "اسمك", phone: "رقم جوالك",
     city: "مدينتك؟", riyadh: "الرياض", jeddah: "جدة", makkah: "مكة", madinah: "المدينة",
-    eastern: "الشرقية", other: "مدينة ثانية",
+    eastern: "الشرقية", other: "مدينة ثانية في السعودية", abroad: "خارج السعودية",
+    placeKsa: "اسم مدينتك", placeAbroad: "الدولة والمدينة",
     send: "احجز العرض", fine: "لما تسجّل، توافق إننا نتواصل معك.",
-    req: "لازم تعبّيه", badPhone: "تأكد من رقم الجوال، مثل 05XXXXXXXX",
+    req: "حقل إلزامي", badPhone: "اكتب الرقم مع رمز الدولة، مثل ‎+966…",
     sending: "لحظة…", sendFail: "ما وصلنا طلبك، جرّب مرة ثانية.",
     okTitle: "وصلنا طلبك", okText: "فريقنا حيتواصل معاك قريب عبر الواتساب",
     waBtn: "تواصل معنا واتساب", waAlt: "تبي تسأل قبل؟ كلمنا على الواتساب", waMsg: "السلام عليكم، حاب أعرف أكثر عن Bakeboard"
@@ -260,9 +263,10 @@ const T = {
     h_3: "Tracking payments and transfers", h_4: "Planning daily baking", h_5: "Keeping customers updated on their order", h_6: "Something else",
     bakery: "Bakery name", name: "Your name", phone: "Mobile number",
     city: "City", riyadh: "Riyadh", jeddah: "Jeddah", makkah: "Makkah", madinah: "Madinah",
-    eastern: "Eastern Province", other: "Other",
+    eastern: "Eastern Province", other: "Another city in Saudi Arabia", abroad: "Outside Saudi Arabia",
+    placeKsa: "Your city", placeAbroad: "Country and city",
     send: "Book a demo", fine: "By signing up you agree to be contacted.",
-    req: "Required", badPhone: "Not a valid Saudi mobile",
+    req: "Required", badPhone: "Include the country code, e.g. +966…",
     sending: "Sending…", sendFail: "Couldn't send. Please try again.",
     okTitle: "Got it", okText: "We'll contact you on WhatsApp soon.",
     waBtn: "Chat on WhatsApp", waAlt: "Questions first? Message us on WhatsApp", waMsg: "Hi, I'd like to know more about Bakeboard"
@@ -290,24 +294,45 @@ document.getElementById("langBtn").onclick = () => {
   lang = lang === "ar" ? "en" : "ar";
   try { localStorage.setItem("cbb_lang", lang); } catch (e) {}
   applyLang();
+  syncPlace();
 };
 
-/* Saudi mobile -> +9665XXXXXXXX (accepts 05…, 5…, 966…, +966…, 00966…, Arabic digits) */
+/* Phone -> international format.
+   Saudi mobiles in any form (05…, 5…, 966…, +966…, 00966…) -> +9665XXXXXXXX.
+   Other countries: must start with + or 00 and the country code, 8–15 digits -> +XXXXXXXX.
+   Arabic/Persian digits, spaces, dashes and brackets are accepted. */
 function phoneOk(raw) {
-  let s = String(raw).replace(/[٠-٩]/g, c => "٠١٢٣٤٥٦٧٨٩".indexOf(c)).replace(/[\s\-()]/g, "")
-    .replace(/^\+/, "").replace(/^00/, "");
-  if (s.startsWith("966")) s = s.slice(3);
-  if (s.startsWith("0")) s = s.slice(1);
-  return /^5\d{8}$/.test(s) ? "+966" + s : null;
+  let s = String(raw).replace(/[٠-٩]/g, c => "٠١٢٣٤٥٦٧٨٩".indexOf(c)).replace(/[۰-۹]/g, c => "۰۱۲۳۴۵۶۷۸۹".indexOf(c))
+    .replace(/[\s\-().\u200e\u200f]/g, "");
+  const intl = /^(\+|00)/.test(s);
+  s = s.replace(/^\+/, "").replace(/^00/, "");
+  if (!/^\d+$/.test(s)) return null;
+  let sa = s;
+  if (sa.startsWith("966")) sa = sa.slice(3);
+  else if (intl) sa = "";               // another country's code
+  if (sa.startsWith("0")) sa = sa.slice(1);
+  if (/^5\d{8}$/.test(sa)) return "+966" + sa;
+  if (intl && /^[1-9]\d{7,14}$/.test(s)) return "+" + s;
+  return null;
 }
 
 const f = document.getElementById("f");
 f.addEventListener("input", e => e.target.closest(".field")?.classList.remove("bad"));
 f.addEventListener("change", e => e.target.closest(".field")?.classList.remove("bad"));
+
+/* "Another city" / "Outside Saudi Arabia" -> ask for the city (and country) */
+const placeField = document.getElementById("placeField");
+function syncPlace() {
+  const v = f.city.value, show = v === "other" || v === "abroad";
+  placeField.hidden = !show;
+  if (!show) { f.place.value = ""; placeField.classList.remove("bad"); }
+  f.place.placeholder = T[lang][v === "abroad" ? "placeAbroad" : "placeKsa"];
+}
+f.city.addEventListener("change", syncPlace);
 f.addEventListener("submit", async e => {
   e.preventDefault();
   if (f.website.value) return;
-  const checks = [[f.bakery, f.bakery.value.trim()], [f.name, f.name.value.trim()], [f.phone, phoneOk(f.phone.value)], [f.city, f.city.value], [f.type, f.type.value], [f.volume, f.volume.value], [f.help, f.help.value]];
+  const checks = [[f.bakery, f.bakery.value.trim()], [f.name, f.name.value.trim()], [f.phone, phoneOk(f.phone.value)], [f.city, f.city.value], [f.place, placeField.hidden || f.place.value.trim()], [f.type, f.type.value], [f.volume, f.volume.value], [f.help, f.help.value]];
   let first = null;
   checks.forEach(([el, ok]) => { el.closest(".field").classList.toggle("bad", !ok); if (!ok && !first) first = el; });
   if (first) { first.focus(); return; }
@@ -318,7 +343,7 @@ f.addEventListener("submit", async e => {
     "المخبز": bakery,
     "الاسم": f.name.value.trim(),
     "الجوال": phoneOk(f.phone.value),
-    "المدينة": label(f.city),
+    "المدينة": label(f.city) + (placeField.hidden ? "" : " — " + f.place.value.trim()),
     "نوع المشروع": label(f.type),
     "طلبات بالأسبوع": label(f.volume),
     "يحتاج مساعدة في": label(f.help),
